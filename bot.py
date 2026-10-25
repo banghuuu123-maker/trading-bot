@@ -2,6 +2,8 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from telegram.request import HTTPXRequest
 import os
+from flask import Flask
+import threading
 
 TOKEN = os.getenv("TOKEN") or "8964751799:AAGERNIrze2zJoVdJHo4T6stomsK_CJcbwg"
 def to_float(s):
@@ -46,7 +48,15 @@ async def hitung(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
     except Exception as e:
         await update.message.reply_text(f"Format salah. Contoh: /hitung 1000 1 50000 49000\nError: {e}")
-
+        
+from flask import Flask
+import threading
+app = Flask(__name__)
+@app.route('/')
+def home(): return "Bot ON!"
+def run_web():
+    app.run(host='0.0.0.0', port=10000)
+threading.Thread(target=run_web).start()
 app = ApplicationBuilder().token(TOKEN).build()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("hitung", hitung))
